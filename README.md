@@ -1,18 +1,19 @@
 # s3-readstream
 AWS S3 Read Stream made easy
 
-Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html) call to grab a range of bytes allowing smooth and stable streaming!
+Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html)'s grab-by-range call allowing intuitive and stable smart streaming.
 * Simple interface for streaming any size file from AWS S3
 * Easily speed-up, and slow down, the streaming at any point
 * All of the functionaly you love with NodeJS Readable streams
 * Drop in replacement for `AWS.S3.getObject().createReadStream()`
 
 
+To install the package:
 ```
 npm install s3-readstream
 ```
 
-You can use the `S3ReadStream` class with the [`aws-sdk`](https://www.npmjs.com/package/aws-sdk) package easily:
+You can integrate the `S3ReadStream` class with the [`aws-sdk`](https://www.npmjs.com/package/aws-sdk) package easily:
 
 ```js
 import * as AWS from 'aws-sdk';
@@ -55,7 +56,7 @@ stream.on('end', () => {
   console.log('end');
 });
 ```
-Use this with `zlib` to handle zipped files!
+To work with zipped files:
 ```js
 import {createGunzip} from 'zlib';
 
@@ -64,4 +65,4 @@ const gzip = createGunzip();
 stream.pipe(gzip)
 ```
 
-You can test this stream in an [example HD video streaming app](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
+See `s3-readstream` in action in an [HD video streaming app example](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
