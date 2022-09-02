@@ -1,6 +1,6 @@
 {
   "name": "s3-readstream",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AWS s3 readable stream made easy",
   "main": "dist/S3Readstream.js",
   "types": "dist/S3Readstream.d.js",
