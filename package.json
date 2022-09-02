@@ -1,7 +1,7 @@
 {
   "name": "s3-readstream",
-  "version": "0.0.4",
-  "description": "AWS s3 readable stream made easy",
+  "version": "0.0.6",
+  "description": "Drop in AWS S3 replacement read stream",
   "main": "dist/S3Readstream.js",
   "types": "dist/S3Readstream.d.js",
   "scripts": {
@@ -12,10 +12,14 @@
     "aws",
     "s3",
     "stream",
-    "readable streams",
+    "readable",
     "download",
-    "large file"
+    "file"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/about14sheep/s3-readstream"
+  },
   "author": "Austin Burger <aburger91@gmail.com> (https://austinburger.dev)",
   "license": "MIT",
   "devDependencies": {
