@@ -1,0 +1,18 @@
+{
+  "name": "s3-readstream",
+  "version": "0.0.1",
+  "description": "AWS s3 readable stream made easy",
+  "main": "dist/S3Readstream.js",
+  "types": "dist/S3Readstream.d.js",
+  "scripts": {
+    "clean": "rm -rd dist",
+    "build": "npm run clean && tsc"
+  },
+  "author": "Austin Burger",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "aws-sdk": "^2.1208.0",
+    "typescript": "^4.8.2"
+  }
+}
