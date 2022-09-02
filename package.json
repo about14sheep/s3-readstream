@@ -1,6 +1,6 @@
 {
   "name": "s3-readstream",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "AWS s3 readable stream made easy",
   "main": "dist/S3Readstream.js",
   "types": "dist/S3Readstream.d.js",
@@ -8,8 +8,16 @@
     "clean": "rm -rd dist",
     "build": "npm run clean && tsc"
   },
-  "author": "Austin Burger",
-  "license": "ISC",
+  "keywords": [
+    "aws",
+    "s3",
+    "stream",
+    "readable streams",
+    "download",
+    "large file"
+  ],
+  "author": "Austin Burger <aburger91@gmail.com> (https://austinburger.dev)",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.7.14",
     "aws-sdk": "^2.1208.0",
