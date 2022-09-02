@@ -8,20 +8,26 @@ Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/la
 * Drop in replacement for `AWS.S3.getObject().createReadStream()`
 
 
-
 ```
 npm install s3-readstream
 ```
 
-You can instantiate the `S3ReadStream` class like below:
+You can use the `S3ReadStream` class with the [`aws-sdk`](https://www.npmjs.com/package/aws-sdk) package easily:
 
 ```js
+import * as AWS from 'aws-sdk';
 import {S3ReadStream} from 's3-readstream';
 // Pass in your AWS S3 credentials
 const s3 = new AWS.S3({
   accessKeyId: s3Env.accessKey,
   secretAccessKey: s3Env.secret
 });
+
+const bucketParams = {
+  Bucket: s3Env.bucket, // S3 Bucket Path
+  Key: s3Env.key // S3 file
+};
+
 // Check the headobject like normal to get the length of the file
 s3.headObject(bucketParams, (error, data) => {
     const options = {
@@ -58,4 +64,4 @@ const gzip = createGunzip();
 stream.pipe(gzip)
 ```
 
-You can test this stream in an [example HD video app](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
+You can test this stream in an [example HD video streaming app](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
