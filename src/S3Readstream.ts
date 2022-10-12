@@ -23,11 +23,46 @@ export class S3ReadStream extends Readable {
 		this._maxContentLength = options.maxLength;
 		this._s3 = options.s3;
 		this._s3StreamParams = options.parameters;
-    this._s3DataRange = options.byteRange || 1024 * 1024;
+    this._s3DataRange = options.byteRange || 64 * 1024;
 	}
-  
+
+  /**
+   * Adjust size of range to grab from S3 
+   *
+   * @param {number} bytes - Number of bytes to set for range
+  */
   adjustByteRange(bytes: number) {
     this._s3DataRange = bytes;
+  }
+
+  /**
+   * Moves cursor bytes length back in file 
+   *
+   * If current cursor position - number of bytes to move back 
+   * is >= 0, set cursor at begining of file
+   * @param {number} bytes - Number of bytes to subtract from cursor (defaults to range)
+  */
+  moveCursorBack(bytes: number = this._s3DataRange) {
+    if (this._currentCursorPosition - bytes > 0) {
+      this._currentCursorPosition -= bytes;
+    } else {
+      this._currentCursorPosition = 0;
+    }
+  }
+
+  /**
+   * Moves cursor bytes length forward in file
+   *
+   * If current cursor position + number of bytes to move forward 
+   * is > the length of the file, set cursor at end of file 
+   * @param {number} bytes - Number of bytes to add to cursor (defaults to range)
+  */
+  moveCursorForward(bytes: number = this._s3DataRange) {
+    if (this._currentCursorPosition + bytes <= this._maxContentLength) {
+      this._currentCursorPosition += bytes;
+    } else {
+      this._currentCursorPosition += this._maxContentLength + 1;
+    }
   }
 
 	_read() {

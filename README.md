@@ -8,11 +8,13 @@ Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/la
 * Drop in replacement for `AWS.S3.getObject().createReadStream()`
 
 
+## Installing the package
 To install the package:
 ```
 npm install s3-readstream
 ```
 
+## Using the package
 You can integrate the `S3ReadStream` class with the [`aws-sdk`](https://www.npmjs.com/package/aws-sdk) package easily:
 
 ```js
@@ -35,18 +37,30 @@ s3.headObject(bucketParams, (error, data) => {
         parameters: bucketParams,
         s3,
         maxLength: data.ContentLength,
-        byteRange: 1024 * 1024 * 5 // 5 MiB
+        byteRange: 1024 * 1024 // 1 MiB (optional - defaults to 64kb)
     };
     // Instantiate the S3ReadStream in place of s3.getObject().createReadStream()
     const stream = new S3ReadStream(options);
 });
 ```
+### Adjusting the read stream
 To adjust the speed of the stream:
 ```js
 // You can adjust the speed at any point during the stream
-stream.adjustByteRange(1024 * 1024 * 10); // 10 MiB
+stream.adjustByteRange(1024 * 1024 * 5); // 5 MiB
 ```
+To adjust cursor position:
+```
+// You can move the cursor forwards to skip ahead (or back) in the file
+// By default, the stream will skip ahead by the current Range
+stream.moveCursorForward();
+stream.moveCursorBack();
 
+// Both of these methods also take in a `bytes` parameter for finer control
+stream.moveCursorForward(10 * 1024); // Move cursor forward 10 KiB in file
+stream.moveCursorBack(5 * 1024); // Move cursor back 5 KiB in file
+```
+### Inherited features from NodeJS Readable class
 You can alse use this `S3ReadStream` like any other [NodeJS Readable stream](https://nodejs.org/api/stream.html#readable-streams), setting an event listener is exactly the same:
 ```js
 stream.on('data', (chunk) => {
@@ -62,7 +76,7 @@ import {createGunzip} from 'zlib';
 
 const gzip = createGunzip();
 // pipe into gzip to unzip files as you stream!
-stream.pipe(gzip)
+stream.pipe(gzip);
 ```
 
 See `s3-readstream` in action in an [HD video streaming app example](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
