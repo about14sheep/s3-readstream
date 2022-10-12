@@ -44,13 +44,13 @@ s3.headObject(bucketParams, (error, data) => {
 });
 ```
 ### Adjusting the read stream
-To adjust the speed of the stream:
+To adjust the range of bytes grabbed from S3:
 ```js
-// You can adjust the speed at any point during the stream
+// You can adjust the range at any point during the stream (adjusting the speed)
 stream.adjustByteRange(1024 * 1024 * 5); // 5 MiB
 ```
 To adjust cursor position:
-```
+```js
 // You can move the cursor forwards to skip ahead (or back) in the file
 // By default, the stream will skip ahead by the current Range
 stream.moveCursorForward();
@@ -78,5 +78,5 @@ const gzip = createGunzip();
 // pipe into gzip to unzip files as you stream!
 stream.pipe(gzip);
 ```
-
+## Example
 See `s3-readstream` in action in an [HD video streaming app example](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
