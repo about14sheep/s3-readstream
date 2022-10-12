@@ -84,27 +84,27 @@ stream.pipe(gzip);
 Instantiates a new `S3ReadStream` object.
 
 Parameter:
-* options (S3ReadStreamOptions) - Container object to hold options
-  *  parameters ([S3.GetObjectRequest](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html#API_GetObject_RequestSyntax)) - Parameters to pass into S3 `getObject` method call
-  * s3 ([S3](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html)) - Resolved S3 object
-  * maxLength (number) - Total length of file in S3 bucket
-  * byteRange (number) - (optional) Range of bytes to grab in S3 `getObject` call (defaults to 64 KiB)
-* nodeReadableStreamOptions ([ReadableOptions](https://nodejs.org/api/stream.html#new-streamreadableoptions)) - (optional) NodeJs Readable options to pass to super call
+* `options` (S3ReadStreamOptions) - Container object to hold options
+  *  `options.parameters` ([S3.GetObjectRequest](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html#API_GetObject_RequestSyntax)) - Parameters to pass into S3 `getObject` method call
+  * `options.s3` ([S3](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html)) - Resolved S3 object
+  * `options.maxLength` (number) - Total length of file in S3 bucket
+  * `options.byteRange` (number) - (optional) Range of bytes to grab in S3 `getObject` call (defaults to 64 KiB)
+* `nodeReadableStreamOptions` ([ReadableOptions](https://nodejs.org/api/stream.html#new-streamreadableoptions)) - (optional) NodeJs Readable options to pass to super call
 ### `adjustByteRange(bytes: number)`
 Adjusts the `S3ReadStream._s3DataRange` property. Can be used to slow down or speed up the stream by grabbing a smaller or larger range of bytes.
 
 Parameter:
-* bytes (number) - New range of bytes to set
+* `bytes` (number) - New range of bytes to set
 ### `moveCursorForward(bytes: number)`
 Adjust the `S3ReadStream._currentCusorPosition` property moving the cursor forward `bytes` amount.
 
 Parameter:
-* bytes (number) - (optional) Number of bytes to move forward (defaults to current range)
+* `bytes` (number) - (optional) Number of bytes to move forward (defaults to current range)
 ### `moveCursorBack(bytes: number)`
 Adjust the `S3ReadStream._currentCusorPosition` property moving the cursor back `bytes` amount.
 
 Parameter:
-* bytes (number) - (optional) Number of bytes to move forward (defaults to current range)
+* `bytes` (number) - (optional) Number of bytes to move forward (defaults to current range)
 
 ## Example
 See `s3-readstream` in action in an [HD video streaming app example](https://github.com/about14sheep/awsstreaming) and read a [blog on its origins](https://dev.to/about14sheep/streaming-data-from-aws-s3-using-nodejs-stream-api-and-typescript-3dj0).
