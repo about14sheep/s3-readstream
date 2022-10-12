@@ -39,7 +39,7 @@ export class S3ReadStream extends Readable {
    * Moves cursor bytes length back in file 
    *
    * If current cursor position - number of bytes to move back 
-   * is >= 0, set cursor at begining of file
+   * is <= 0, set cursor at begining of file
    * @param {number} bytes - Number of bytes to subtract from cursor (defaults to range)
   */
   moveCursorBack(bytes: number = this._s3DataRange) {
