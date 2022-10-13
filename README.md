@@ -83,7 +83,7 @@ stream.pipe(gzip);
 ### `S3ReadStream(options: S3ReadStreamOptions)`
 Instantiates a new `S3ReadStream` object.
 
-Parameter:
+Parameters:
 * `options` (S3ReadStreamOptions) - Container object to hold options
   *  `options.parameters` ([S3.GetObjectRequest](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html#API_GetObject_RequestSyntax)) - Parameters to pass into S3 `getObject` method call
   * `options.s3` ([S3](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html)) - Resolved S3 object
@@ -96,12 +96,14 @@ Adjusts the `S3ReadStream._s3DataRange` property. Can be used to slow down or sp
 Parameter:
 * `bytes` (number) - New range of bytes to set
 ### `moveCursorForward(bytes: number)`
-Adjust the `S3ReadStream._currentCusorPosition` property moving the cursor forward `bytes` amount.
+Drains the internal buffer and adjusts the `S3ReadStream._currentCusorPosition` property moving the cursor forward `bytes` amount.
+If current cursor position + number of bytes to move forward is > the length of the file, set cursor at end of file 
 
 Parameter:
 * `bytes` (number) - (optional) Number of bytes to move forward (defaults to current range)
 ### `moveCursorBack(bytes: number)`
-Adjust the `S3ReadStream._currentCusorPosition` property moving the cursor back `bytes` amount.
+Drains the internal buffer and adjusts the `S3ReadStream._currentCusorPosition` property moving the cursor back `bytes` amount.
+If current cursor position - number of bytes to move back is <= 0, set cursor at begining of file
 
 Parameter:
 * `bytes` (number) - (optional) Number of bytes to move forward (defaults to current range)
