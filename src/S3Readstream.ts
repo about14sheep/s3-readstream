@@ -26,6 +26,10 @@ export class S3ReadStream extends Readable {
     this._s3DataRange = options.byteRange || 64 * 1024;
 	}
 
+  private drainBuffer() {
+    while(this.read());
+  }
+
   /**
    * Adjust size of range to grab from S3 
    *
@@ -36,13 +40,15 @@ export class S3ReadStream extends Readable {
   }
 
   /**
-   * Moves cursor bytes length back in file 
+   * Drains the internal buffer and
+   * moves cursor bytes length back in file 
    *
    * If current cursor position - number of bytes to move back 
    * is <= 0, set cursor at begining of file
    * @param {number} bytes - Number of bytes to subtract from cursor (defaults to range)
   */
   moveCursorBack(bytes: number = this._s3DataRange) {
+    this.drainBuffer();
     if (this._currentCursorPosition - bytes > 0) {
       this._currentCursorPosition -= bytes;
     } else {
@@ -51,13 +57,15 @@ export class S3ReadStream extends Readable {
   }
 
   /**
-   * Moves cursor bytes length forward in file
+   * Drains the internal buffer and 
+   * moves cursor bytes length forward in file
    *
    * If current cursor position + number of bytes to move forward 
    * is > the length of the file, set cursor at end of file 
    * @param {number} bytes - Number of bytes to add to cursor (defaults to range)
   */
   moveCursorForward(bytes: number = this._s3DataRange) {
+    this.drainBuffer();
     if (this._currentCursorPosition + bytes <= this._maxContentLength) {
       this._currentCursorPosition += bytes;
     } else {
