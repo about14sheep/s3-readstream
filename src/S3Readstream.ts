@@ -74,7 +74,7 @@ export class S3ReadStream extends Readable {
   }
 
 	_read() {
-		if (this._currentCursorPosition > this._maxContentLength) {
+		if (this._currentCursorPosition >= this._maxContentLength) {
 			this.push(null);
 		} else {
 			const range = this._currentCursorPosition + this._s3DataRange;
