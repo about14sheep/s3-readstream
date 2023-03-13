@@ -80,7 +80,9 @@ export class S3ReadStream extends Readable {
 			const range = this._currentCursorPosition + this._s3DataRange;
 			const adjustedRange =
 				range < this._maxContentLength ? range : this._maxContentLength;
-			this._s3StreamParams.Range = `bytes=${this._currentCursorPosition}-${adjustedRange}`;
+			if (adjustedRange !== 0) {
+				this._s3StreamParams.Range = `bytes=${this._currentCursorPosition}-${adjustedRange}`;
+			}
 			this._currentCursorPosition = adjustedRange + 1;
 			this._s3.getObject(this._s3StreamParams, (error, data) => {
 				if (error) {
