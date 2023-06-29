@@ -1,19 +1,19 @@
 import {Readable, ReadableOptions} from "stream";
-import type {S3} from "aws-sdk";
+import type { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 export type S3ReadStreamOptions = {
-  parameters: S3.GetObjectRequest;
-  s3: S3;
+  s3: S3Client;
+  command: GetObjectCommand;
   maxLength: number;
   byteRange?: number;
 }
 
 export class S3ReadStream extends Readable {
+	_s3: S3Client;
+	_command: GetObjectCommand;
 	_currentCursorPosition = 0;
 	_s3DataRange: number;
 	_maxContentLength: number;
-	_s3: S3;
-	_s3StreamParams: S3.GetObjectRequest;
 
 	constructor(
     options: S3ReadStreamOptions,
@@ -22,7 +22,7 @@ export class S3ReadStream extends Readable {
 		super(nodeReadableStreamOptions);
 		this._maxContentLength = options.maxLength;
 		this._s3 = options.s3;
-		this._s3StreamParams = options.parameters;
+		this._command = options.command;
     this._s3DataRange = options.byteRange || 64 * 1024;
 	}
 
@@ -73,22 +73,23 @@ export class S3ReadStream extends Readable {
     }
   }
 
-	_read() {
+	async _read() {
 		if (this._currentCursorPosition >= this._maxContentLength) {
 			this.push(null);
 		} else {
 			const range = this._currentCursorPosition + this._s3DataRange;
 			const adjustedRange =
 				range < this._maxContentLength ? range : this._maxContentLength;
-			this._s3StreamParams.Range = `bytes=${this._currentCursorPosition}-${adjustedRange}`;
+			this._command.input.Range = `bytes=${this._currentCursorPosition}-${adjustedRange}`;
 			this._currentCursorPosition = adjustedRange + 1;
-			this._s3.getObject(this._s3StreamParams, (error, data) => {
-				if (error) {
-					this.destroy(error);
-				} else {
-					this.push(data.Body);
-				}
-			});
+
+      try {
+        const response = await this._s3.send(this._command);
+        const data = await response.Body.transformToByteArray();
+        this.push(data);
+      } catch (error) {
+        this.destroy(error);
+      }
 		}
 	}
 }

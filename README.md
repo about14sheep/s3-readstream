@@ -1,12 +1,15 @@
 # s3-readstream
 AWS S3 Read Stream made easy
 
-Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html)'s grab-by-range call allowing intuitive and stable smart streaming.
+Simple wrapper around [AWS S3Client GetObjectCommand](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html)'s grab-by-range call allowing intuitive and stable smart streaming.
+* ZERO Dependencies
 * Simple interface for streaming any size file from AWS S3
 * Easily speed-up, and slow down, the streaming at any point
 * All of the functionaly you love with NodeJS Readable streams
-* Drop in replacement for `AWS.S3.getObject().createReadStream()`
+* Drop in replacement for `(await S3Client.send(new GetObjectCommand())).Body`
 
+## AWS v3 updates
+Since AWS updated their SDK to be more modular, it introduced breaking changes into version 1 of this package. So we have updated as well! Going forward, version 2 of this package will *only* work with the new AWS v3 SDK. However, if your project still uses AWS v2 sdk, you can use the npm tag `sdk` to install version 1 of this package. Checkout the [documentation on version 1](https://github.com/about14sheep/s3-readstream/tree/v1#s3-readstream).
 
 ## Installing the package
 To install the package:
@@ -15,15 +18,18 @@ npm install s3-readstream
 ```
 
 ## Using the package
-You can integrate the `S3ReadStream` class with the [`aws-sdk`](https://www.npmjs.com/package/aws-sdk) package easily:
+You can integrate the `S3ReadStream` class with the [`@aws-sdk/clientS3`](https://www.npmjs.com/package/@aws-sdk/client-s3) package easily:
 
 ```js
-import * as AWS from 'aws-sdk';
+import { S3Client, GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import {S3ReadStream} from 's3-readstream';
 // Pass in your AWS S3 credentials
-const s3 = new AWS.S3({
-  accessKeyId: s3Env.accessKey,
-  secretAccessKey: s3Env.secret
+const s3 = new S3Client({
+    region: "us-east-1",
+    credentials: {
+        accessKeyId: s3Env.accessKey,
+        secretAccessKey: s3Env.secret
+    }
 });
 
 const bucketParams = {
@@ -31,17 +37,20 @@ const bucketParams = {
   Key: s3Env.key // S3 file
 };
 
-// Check the headobject like normal to get the length of the file
-s3.headObject(bucketParams, (error, data) => {
-    const options = {
-        parameters: bucketParams,
-        s3,
-        maxLength: data.ContentLength,
-        byteRange: 1024 * 1024 // 1 MiB (optional - defaults to 64kb)
-    };
-    // Instantiate the S3ReadStream in place of s3.getObject().createReadStream()
-    const stream = new S3ReadStream(options);
-});
+// Grab the headobject like normal to get the length of the file
+const headObjectCommand = new HeadObjectCommand(bucketParams);
+const headObject = await s3.send(headObjectCommand);
+
+// Because AWS sdk is now modular, pass in the `GetHeadObject` command
+const options = {
+  s3,
+  command: new GetObjectCommand(bucketParams),
+  maxLength: headObject.ContentLength,
+  byteRange: 1024 * 1024 // 1 MiB (optional - defaults to 64kb)
+};
+
+// Instantiate the S3ReadStream in place of (await S3Client.send(new GetObjectCommand())).Body
+const stream = new S3ReadStream(options);
 ```
 ### Adjusting the read stream
 To adjust the range of bytes grabbed from S3:
