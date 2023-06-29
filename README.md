@@ -2,16 +2,19 @@
 AWS S3 Read Stream made easy
 
 Simple wrapper around [AWS S3 getObject](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html)'s grab-by-range call allowing intuitive and stable smart streaming.
+* Zero Dependencies
 * Simple interface for streaming any size file from AWS S3
 * Easily speed-up, and slow down, the streaming at any point
 * All of the functionaly you love with NodeJS Readable streams
 * Drop in replacement for `AWS.S3.getObject().createReadStream()`
 
+## New Version Available
+Since the AWS SDK has updated to version 3, and is now more modular but introduced breaking changes with this package, we have updated too! Please checkout the new version 2 of this package and note that from now on, the `lastest` npm tag will point to version 2. However, using this tag, `sdk`, you can still download the version that works with the `aws-sdk` package.
 
 ## Installing the package
 To install the package:
 ```
-npm install s3-readstream
+npm install s3-readstream@sdk
 ```
 
 ## Using the package
