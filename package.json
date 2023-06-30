@@ -1,7 +1,7 @@
 {
   "name": "s3-readstream",
-  "version": "2.0.0",
-  "description": "Drop in AWS S3 replacement read stream",
+  "version": "2.0.1",
+  "description": "*Updated for AWS-SDK v3* Zero dependency S3Client streaming solution",
   "main": "dist/S3Readstream.js",
   "types": "dist/S3Readstream.d.js",
   "scripts": {

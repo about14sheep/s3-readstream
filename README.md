@@ -41,7 +41,7 @@ const bucketParams = {
 const headObjectCommand = new HeadObjectCommand(bucketParams);
 const headObject = await s3.send(headObjectCommand);
 
-// Because AWS sdk is now modular, pass in the `GetHeadObject` command
+// Because AWS sdk is now modular, pass in the `GetObjectCommand` command object
 const options = {
   s3,
   command: new GetObjectCommand(bucketParams),
@@ -94,7 +94,7 @@ Instantiates a new `S3ReadStream` object.
 
 Parameters:
 * `options` (S3ReadStreamOptions) - Container object to hold options
-  *  `options.parameters` ([S3.GetObjectRequest](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html#API_GetObject_RequestSyntax)) - Parameters to pass into S3 `getObject` method call
+  *  `options.command` ([GetObjectCommand](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html)) - S3 get object command object
   * `options.s3` ([S3](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html)) - Resolved S3 object
   * `options.maxLength` (number) - Total length of file in S3 bucket
   * `options.byteRange` (number) - (optional) Range of bytes to grab in S3 `getObject` call (defaults to 64 KiB)
